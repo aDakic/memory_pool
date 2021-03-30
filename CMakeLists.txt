@@ -5,12 +5,14 @@ project(memory_pool
         LANGUAGES CXX)
 
 set(sources
-    src/memory_chunk.cpp)
+    src/memory_chunk.cpp
+    src/memory_pool.cpp)
     
 set(headers
-    include/${PROJECT_NAME}/memory_chunk.h)
+    include/${PROJECT_NAME}/memory_chunk.h
+    include/${PROJECT_NAME}/memory_pool.h)
 
-add_library(${PROJECT_NAME} ${headers} ${sources})
+add_library(${PROJECT_NAME} SHARED ${headers} ${sources})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
