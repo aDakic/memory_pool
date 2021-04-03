@@ -30,6 +30,7 @@ public:
     [[nodiscard]] std::uint8_t* allocate(std::size_t bytes) noexcept;
     void deallocate(std::uint8_t* ptr, std::size_t bytes) noexcept;
 private:
+
     static constexpr uint16_t m_max_chunk_number {2};
     std::array<memory_chunk, m_max_chunk_number> m_chunks;
 };
