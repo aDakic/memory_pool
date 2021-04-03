@@ -23,6 +23,7 @@ void memory_pool::deallocate(std::uint8_t* ptr, std::size_t bytes) noexcept
         if (chunk.belongs(ptr))
         {
             chunk.deallocate(ptr, bytes);
+            ptr = nullptr;
             return;
         }
     }

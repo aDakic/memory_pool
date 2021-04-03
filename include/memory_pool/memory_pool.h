@@ -18,7 +18,7 @@ public:
         }
 
         std::size_t i = 0;
-        ((m_chunks[i++] = {configs.chunk_size, configs.chunk_size}), ...);
+        ((m_chunks[i++] = {configs.chunk_size, configs.chunk_count}), ...);
     }
 
     memory_pool(const memory_pool&) = delete;
@@ -29,8 +29,8 @@ public:
 
     [[nodiscard]] std::uint8_t* allocate(std::size_t bytes) noexcept;
     void deallocate(std::uint8_t* ptr, std::size_t bytes) noexcept;
-private:
 
-    static constexpr uint16_t m_max_chunk_number {2};
+private:
+    static constexpr uint16_t m_max_chunk_number {100};
     std::array<memory_chunk, m_max_chunk_number> m_chunks;
 };
