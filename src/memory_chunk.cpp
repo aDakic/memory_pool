@@ -37,7 +37,7 @@ memory_chunk::memory_chunk(memory_chunk&& other) noexcept :
     m_data_size(std::exchange(other.m_data_size, 0)),
     m_data(std::move(other.m_data)),
     m_ledger_size(std::exchange(other.m_ledger_size, 0)),
-    m_ledger(std::move(other.m_ledger))    
+    m_ledger(std::move(other.m_ledger)) 
 {
     other.m_data = nullptr;
     other.m_ledger = nullptr;
@@ -57,6 +57,7 @@ memory_chunk& memory_chunk::operator=(memory_chunk&& other) noexcept
 
     return *this;
 }
+
 memory_chunk::~memory_chunk()
 {
     if (m_data != nullptr)
@@ -77,9 +78,7 @@ std::uint8_t* memory_chunk::allocate(std::size_t bytes) noexcept
     const auto index = find_contiguous_blocks(n);  
 
     if (index == m_count) 
-    {   
         return nullptr;  
-    }  
 
     set_blocks_in_use(index, n);  
     return m_data + (index * m_chunk_size);
@@ -94,11 +93,20 @@ void memory_chunk::deallocate(std::uint8_t * pointer, std::size_t bytes) noexcep
     set_blocks_free(index, n);
 }
 
+std::size_t memory_chunk::get_chunk_size() const noexcept
+{
+    return m_chunk_size;
+}
+
+std::size_t memory_chunk::get_chunk_count() const noexcept
+{
+    return m_count;
+}
+
 void memory_chunk::set_blocks_in_use(std::size_t index, std::size_t n) noexcept
 {
     for (std::size_t i = 0; i < n; ++i)
-        *m_ledger ^= 1UL << (index + i);
-    
+        *m_ledger ^= 1UL << (index + i);   
 }
 
 void memory_chunk::set_blocks_free(std::size_t index, std::size_t n) noexcept
