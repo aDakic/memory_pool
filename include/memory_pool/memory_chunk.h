@@ -6,7 +6,12 @@
 class memory_chunk
 {
 public:
+    memory_chunk() noexcept;
     memory_chunk(std::size_t chunk_size, std::size_t count);
+    memory_chunk(const memory_chunk&) = delete;
+    memory_chunk(memory_chunk&&) noexcept;
+    memory_chunk& operator=(const memory_chunk&) = delete;
+    memory_chunk& operator=(memory_chunk&&) noexcept;
     ~memory_chunk();
     bool belongs(std::uint8_t* pointer) const noexcept;
     [[nodiscard]] std::uint8_t* allocate(std::size_t bytes) noexcept;

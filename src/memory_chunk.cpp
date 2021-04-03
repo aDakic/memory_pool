@@ -1,10 +1,26 @@
 #include <cstring>
 #include <cstdlib>
+#include <utility>
 #include "memory_pool/memory_chunk.h"
+#include <iostream>
+
+memory_chunk::memory_chunk() noexcept : 
+    m_chunk_size(0), 
+    m_count(0),
+    m_data_size(0),
+    m_data(nullptr),
+    m_ledger_size(0),
+    m_ledger(nullptr)
+{}
 
 memory_chunk::memory_chunk(std::size_t chunk_size, std::size_t count)
     : m_chunk_size(chunk_size), m_count(count)
 {
+    if (0 >= m_chunk_size || 0 >= m_count)
+    {
+        std::bad_alloc();
+    }
+
     m_data_size = m_chunk_size * m_count;
     m_data = static_cast<std::uint8_t*>(std::malloc(m_data_size));
 
@@ -15,10 +31,39 @@ memory_chunk::memory_chunk(std::size_t chunk_size, std::size_t count)
     std::memset(m_ledger, 0, m_ledger_size);
 }
 
+memory_chunk::memory_chunk(memory_chunk&& other) noexcept : 
+    m_chunk_size(std::exchange(other.m_chunk_size, 0)), 
+    m_count(std::exchange(other.m_count, 0)),
+    m_data_size(std::exchange(other.m_data_size, 0)),
+    m_data(std::move(other.m_data)),
+    m_ledger_size(std::exchange(other.m_ledger_size, 0)),
+    m_ledger(std::move(other.m_ledger))    
+{
+    other.m_data = nullptr;
+    other.m_ledger = nullptr;
+}
+
+memory_chunk& memory_chunk::operator=(memory_chunk&& other) noexcept
+{
+    m_chunk_size = std::exchange(other.m_chunk_size, 0);
+    m_count = std::exchange(other.m_count, 0);
+    m_data_size = std::exchange(other.m_data_size, 0);
+    m_data = std::move(other.m_data);
+    m_ledger_size = std::exchange(other.m_ledger_size, 0);
+    m_ledger = std::move(other.m_ledger);  
+
+    other.m_data = nullptr;
+    other.m_ledger = nullptr;
+
+    return *this;
+}
 memory_chunk::~memory_chunk()
 {
-    std::free(m_data);
-    std::free(m_ledger);
+    if (m_data != nullptr)
+        std::free(m_data);
+
+    if (m_ledger != nullptr)
+        std::free(m_ledger);
 }
 
 bool memory_chunk::belongs(std::uint8_t* pointer) const noexcept 
