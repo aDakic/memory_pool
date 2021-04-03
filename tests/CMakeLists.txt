@@ -1,6 +1,7 @@
 set(test_sources
     memory_chunk_test.cpp
-    memory_pool_test.cpp)
+    memory_pool_test.cpp
+    memory_pool_allocator_test.cpp)
 
 add_executable(test ${test_sources})
 
