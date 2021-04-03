@@ -7,7 +7,7 @@ std::uint8_t* memory_pool::allocate(std::size_t bytes) noexcept
     for (auto & chunk : m_chunks) 
     {    
         if (chunk.get_chunk_size() >= bytes)
-        {      
+        {
             if (ptr = chunk.allocate(bytes); ptr != nullptr) 
                 break;
         }

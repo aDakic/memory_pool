@@ -3,7 +3,7 @@
 #include <utility>
 #include "memory_pool/memory_chunk.h"
 #include <iostream>
-
+#include <algorithm>
 memory_chunk::memory_chunk() noexcept : 
     m_chunk_size(0), 
     m_count(0),
@@ -24,7 +24,7 @@ memory_chunk::memory_chunk(std::size_t chunk_size, std::size_t count)
     m_data_size = m_chunk_size * m_count;
     m_data = static_cast<std::uint8_t*>(std::malloc(m_data_size));
 
-    m_ledger_size = 1 + ((m_count - 1) / 8);
+    m_ledger_size = m_data_size;
     m_ledger = static_cast<std::uint8_t*>(std::malloc(m_ledger_size));
 
     std::memset(m_data, 0, m_data_size);
@@ -76,7 +76,7 @@ std::uint8_t* memory_chunk::allocate(std::size_t bytes) noexcept
 {
     const auto n = 1 + ((bytes - 1) / m_chunk_size);  
     const auto index = find_contiguous_blocks(n);  
-
+    
     if (index == m_count) 
         return nullptr;  
 
@@ -105,43 +105,17 @@ std::size_t memory_chunk::get_chunk_count() const noexcept
 
 void memory_chunk::set_blocks_in_use(std::size_t index, std::size_t n) noexcept
 {
-    for (std::size_t i = 0; i < n; ++i)
-        *m_ledger ^= 1UL << (index + i);   
+    std::for_each_n(m_ledger + index, n, [](auto& bit){ bit = 1;}); 
 }
 
 void memory_chunk::set_blocks_free(std::size_t index, std::size_t n) noexcept
 {
-    for (std::size_t i = 0; i < n; ++i)
-        *m_ledger &= ~(1UL << index + i);
+    std::for_each_n(m_ledger + index, n, [](auto& bit){ bit = 0;});
 }
 
 std::size_t memory_chunk::find_contiguous_blocks(std::size_t n) const noexcept
 {
-    std::size_t blocks_num = 0;
-    std::size_t index = -1;
-    bool started_counting = false;
-
-    for (std::size_t i = 0; i < m_ledger_size * 8; ++i)
-    {
-        const auto bit = *m_ledger & 1 << i;
-        if(!bit)
-        {
-            if (!started_counting)
-            {
-                index = i;
-                started_counting = true;
-            }
-
-            if(++blocks_num == n)
-                break;
-        }
-        else
-        {
-            index = -1;
-            blocks_num = 0;
-            started_counting = 0;
-        }
-    }
-
+    auto it = std::search_n(m_ledger, m_ledger + m_ledger_size, n, 0);
+    size_t index = it - m_ledger;
     return index;
 }
