@@ -4,6 +4,10 @@
 #include "memory_pool/memory_chunk.h"
 #include <iostream>
 #include <algorithm>
+
+namespace memory_pool
+{
+
 memory_chunk::memory_chunk() noexcept : 
     m_chunk_size(0), 
     m_count(0),
@@ -118,4 +122,6 @@ std::size_t memory_chunk::find_contiguous_blocks(std::size_t n) const noexcept
     auto it = std::search_n(m_ledger, m_ledger + m_ledger_size, n, 0);
     size_t index = it - m_ledger;
     return index;
+}
+
 }

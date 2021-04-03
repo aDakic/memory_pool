@@ -4,6 +4,9 @@
 #include <cstdint>
 #include <vector>
 
+namespace memory_pool
+{
+
 class memory_chunk
 {
 public:
@@ -34,3 +37,5 @@ private:
     std::size_t m_chunk_size;
     std::size_t m_count;
 };
+
+}

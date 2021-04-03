@@ -3,6 +3,9 @@
 #include "memory_pool/memory_pool.h"
 #include <iostream>
 
+namespace memory_pool
+{
+
 template <typename T>
 class pool_allocator
 {
@@ -34,3 +37,5 @@ public:
 private:
     memory_pool& m_pool_ref;
 };
+
+}

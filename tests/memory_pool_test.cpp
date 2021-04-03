@@ -4,14 +4,14 @@
 
 TEST(test_memory_pool, construction)
 {
-    EXPECT_NO_THROW(memory_pool pool(memory_config{sizeof(int), 2}));
-    EXPECT_NO_THROW(memory_pool pool(memory_config{sizeof(int), 1000}));
-    EXPECT_NO_THROW(memory_pool pool(memory_config{sizeof(long), 10}));
+    EXPECT_NO_THROW(memory_pool::memory_pool pool(memory_pool::memory_config{sizeof(int), 2}));
+    EXPECT_NO_THROW(memory_pool::memory_pool pool(memory_pool::memory_config{sizeof(int), 1000}));
+    EXPECT_NO_THROW(memory_pool::memory_pool pool(memory_pool::memory_config{sizeof(long), 10}));
 }
 
 TEST(test_memory_pool, allocate_and_deallocate)
 {
-    memory_pool pool(memory_config{sizeof(int), 2});
+    memory_pool::memory_pool pool(memory_pool::memory_config{sizeof(int), 2});
 
     int* ptr1 = reinterpret_cast<int*>(pool.allocate(4));
     EXPECT_NE(ptr1, nullptr);

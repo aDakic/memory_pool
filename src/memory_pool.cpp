@@ -1,5 +1,8 @@
 #include "memory_pool/memory_pool.h"
 
+namespace memory_pool
+{
+
 std::uint8_t* memory_pool::allocate(std::size_t bytes) noexcept
 {
     std::uint8_t* ptr = nullptr;
@@ -27,4 +30,6 @@ void memory_pool::deallocate(std::uint8_t* ptr, std::size_t bytes) noexcept
             return;
         }
     }
+}
+
 }

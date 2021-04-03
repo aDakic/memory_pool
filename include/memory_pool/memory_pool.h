@@ -6,6 +6,9 @@
 #include "memory_common_types.h"
 #include <iostream>
 
+namespace memory_pool
+{
+
 class memory_pool
 {
 public:
@@ -34,3 +37,5 @@ private:
     static constexpr uint16_t m_max_chunk_number {100};
     std::array<memory_chunk, m_max_chunk_number> m_chunks;
 };
+
+}
