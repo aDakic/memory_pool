@@ -21,6 +21,12 @@ public:
         ((m_chunks[i++] = {configs.chunk_size, configs.chunk_size}), ...);
     }
 
+    memory_pool(const memory_pool&) = delete;
+    memory_pool(memory_pool&&) = delete;
+    memory_pool& operator=(const memory_pool&) = delete;
+    memory_pool& operator=(memory_pool&&) = delete;
+    ~memory_pool() noexcept = default;
+
     [[nodiscard]] std::uint8_t* allocate(std::size_t bytes) noexcept;
     void deallocate(std::uint8_t* ptr, std::size_t bytes) noexcept;
 private:

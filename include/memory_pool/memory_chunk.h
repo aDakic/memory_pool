@@ -12,7 +12,7 @@ public:
     memory_chunk(memory_chunk&&) noexcept;
     memory_chunk& operator=(const memory_chunk&) = delete;
     memory_chunk& operator=(memory_chunk&&) noexcept;
-    ~memory_chunk();
+    ~memory_chunk() noexcept;
 
     bool belongs(std::uint8_t* pointer) const noexcept;
     [[nodiscard]] std::uint8_t* allocate(std::size_t bytes) noexcept;
